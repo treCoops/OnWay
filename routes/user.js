@@ -48,7 +48,7 @@ const upload = multer({
 
 router.get('/', function(req, res, next) {
 
-    if(req.session.user && req.session.user === 'SUPER ADMIN') {
+    if(req.session.user && req.session.user.account_type.toString() === 'SUPER ADMIN') {
         res.render('Template/template', {
             Page_Content: 'Super',
             title: 'OnWay | Super Admin',
@@ -66,7 +66,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/regional_admin', function(req, res, next) {
 
-    if(req.session.user && req.session.user === 'SUPER ADMIN') {
+    if(req.session.user && req.session.user.account_type.toString() === 'SUPER ADMIN') {
         res.render('Template/template', {
             Page_Content: 'Regional',
             title: 'OnWay | Regional Admin',
