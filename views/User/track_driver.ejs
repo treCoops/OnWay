@@ -71,7 +71,6 @@
                 snapshot.forEach(function(childSnapshot){
                     firebase.database().ref('mobile_users').child('drivers').child(childSnapshot.key).on('value', function (snapshot1){
                         let storageObj = snapshot1.val();
-                        console.log(storageObj);
                         let marker = { lat: storageObj.live_loc.lat, lng: storageObj.live_loc.long };
 
                         addMarker(marker);
