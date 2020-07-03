@@ -10,7 +10,8 @@
             </div>
             <!-- User profile text-->
             <div class="profile-text">
-                <h4><%= profile.first_name+" "+profile.last_name%></h4>
+                <h5><%= profile.first_name+" "+profile.last_name%></h5>
+                <h6 class="text-muted"><%= profile.account_type %></h6>
             </div>
         </div>
         <!-- End User profile text-->
@@ -28,6 +29,17 @@
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="/user">Super Admin</a></li>
                             <li><a href="/user/regional_admin">Regional Admin</a></li>
+                        </ul>
+                    </li>
+
+                <% } %>
+
+                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+
+                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-cellphone-android"></i><span class="hide-menu">Mobile Users</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/user/drivers">Drivers</a></li>
+                            <li><a href="/user/passengers">Passengers</a></li>
                         </ul>
                     </li>
 
