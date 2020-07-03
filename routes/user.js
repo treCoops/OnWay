@@ -47,15 +47,25 @@ const upload = multer({
 
 router.get('/', function(req, res, next) {
 
-    if(req.session.user && req.session.user.account_type.toString() === 'SUPER ADMIN') {
-        res.render('Template/template', {
-            Page_Content: 'Super',
-            title: 'OnWay | Super Admin',
-            profile: req.session.user
-        });
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Super',
+                title: 'OnWay | Super Admin',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
     }else{
         res.render('Login/login', {
-            data: 'Please login with super admin account!.',
+            data: 'Please login!.',
             title: 'OnWay | Login',
             status: ''
         });
@@ -65,15 +75,25 @@ router.get('/', function(req, res, next) {
 
 router.get('/regional_admin', function(req, res, next) {
 
-    if(req.session.user && req.session.user.account_type.toString() === 'SUPER ADMIN') {
-        res.render('Template/template', {
-            Page_Content: 'Regional',
-            title: 'OnWay | Regional Admin',
-            profile: req.session.user
-        });
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Regional',
+                title: 'OnWay | Regional Admin',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
     }else{
         res.render('Login/login', {
-            data: 'Please login with super admin account!.',
+            data: 'Please login!.',
             title: 'OnWay | Login',
             status: ''
         });
@@ -82,12 +102,22 @@ router.get('/regional_admin', function(req, res, next) {
 
 
 router.get('/drivers', function(req, res) {
-    if(req.session.user && ( req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN')) {
-        res.render('Template/template', {
-            Page_Content: 'Driver',
-            title: 'OnWay | Drivers',
-            profile: req.session.user
-        });
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Driver',
+                title: 'OnWay | Drivers',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
     }else{
         res.render('Login/login', {
             data: 'Please login with super admin account!.',
@@ -98,15 +128,50 @@ router.get('/drivers', function(req, res) {
 });
 
 router.get('/passengers', function(req, res) {
-    if(req.session.user && ( req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN')) {
-        res.render('Template/template', {
-            Page_Content: 'Passenger',
-            title: 'OnWay | Passengers',
-            profile: req.session.user
-        });
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Passenger',
+                title: 'OnWay | Passengers',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
     }else{
         res.render('Login/login', {
-            data: 'Please login with super admin account!.',
+            data: 'Please login!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/trackDrivers', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Track_Driver',
+                title: 'OnWay | Passengers',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login!.',
             title: 'OnWay | Login',
             status: ''
         });
