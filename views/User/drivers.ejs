@@ -1,0 +1,193 @@
+<div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+        <h3 class="text-themecolor">Manage Drivers</h3>
+    </div>
+    <div class="col-md-7 align-self-center">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Mobile Users</a></li>
+            <li class="breadcrumb-item active">Drivers</li>
+        </ol>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Bread crumb and right sidebar toggle -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Container fluid  -->
+<!-- ============================================================== -->
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <!-- Row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-outline-info">
+                <div class="card-header">
+                    <h4 class="m-b-0 text-white">Driver details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive m-t-40">
+                        <table id="myTable" class="table table-bordered table-striped">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Row -->
+</div>
+
+<script>
+    function delete_account(data){
+        $("#page_load").show();
+        swal({
+            title: "Do you want to remove this account?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#fcb03b",
+            confirmButtonText: "Yes, remove it!",
+            cancelButtonText: "No, cancel it!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        }, function(isConfirm){
+            if (isConfirm)
+            {
+                $.ajax({
+                    url: "/user/removeSuperUser",
+                    data: {ID : data},
+                    method: "post",
+                    dataType: "json",
+                    error: function(error){
+                        $("#page_load").hide();
+                        swal("Failed", "The operation which you perform is failed!", "error");
+                    },
+                    success: function(r){
+                        $("#page_load").hide();
+                        if(r.status === 200){
+                            swal("Removed!", r.message, "success");
+                        }
+
+                        if(r.status == 500){
+                            swal("Failed", r.message, "error");
+                        }
+                    }
+                });
+            }
+            else {
+                swal("Cancelled", "The operation cancelled by the user", "error");
+            }
+        });
+    }
+
+    function block_account(data){
+        swal({
+            title: "Do you want to block this account?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#fcb03b",
+            confirmButtonText: "Yes, block it!",
+            cancelButtonText: "No, cancel it!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        }, function(isConfirm){
+            if (isConfirm)
+            {
+                $.ajax({
+                    url: "/user/blockSuperUser",
+                    data: {ID : data},
+                    method: "post",
+                    dataType: "json",
+                    error: function(error){
+                        swal("Failed", "The operation which you perform is failed!", "error");
+                    },
+                    success: function(r){
+                        if(r.status === 200){
+                            swal("Removed!", r.message, "success");
+                        }
+
+                        if(r.status == 500){
+                            swal("Failed", r.message, "error");
+                        }
+                    }
+                });
+            }
+            else {
+                swal("Cancelled", "The operation cancelled by the user", "error");
+            }
+        });
+    }
+
+    function feedDT(dataSrc){
+        $('#myTable').DataTable({
+            "bDestroy": true,
+            data: dataSrc,
+            language: {
+                "emptyTable": "No files to show..."
+            },
+            columns: [
+                { title: "Profile Pic",
+                    mRender: function (data) {
+                        return '<img src="'+data+'" alt="user" width="30" class="img-circle" /> '
+                    }
+                },
+                { title: "First Name" },
+                { title: "Last Name" },
+                { title: "Vehicle No" },
+                { title: "Vehicle Category" },
+                { title: "E-mail" },
+                { title: "Contact No" },
+                { title: "status",
+                    mRender: function (data) {
+                        if(data === 0){
+                            return '<span class="label label-info">Active</span>'
+                        }
+                        if(data === 1){
+                            return '<span class="label label-danger">Blocked</span>'
+                        }
+                    }
+                },
+                { title: "Action",
+                    mRender: function (data) {
+                        let fields = data.split('-');
+                        if(fields[0] === '1'){
+                            return '<div class="btn-group btn-group-xs  "><button id="btn-row-edit" onclick="block_account(\''+data+'\');" class="btn btn-danger"><i class="ti-na"></i></button></div>' +
+                                '<div class="btn-group btn-group-xs col-md-2 "><button id="btn-row-delete" onclick="delete_account(\''+fields[1]+'\');" class="btn btn-danger"><i class="ti-trash"></i></button></div> '
+                        }if(fields[0] === '0'){
+                            return '<div class="btn-group btn-group-xs  "><button id="btn-row-edit" onclick="block_account(\''+data+'\');" class="btn btn-info"><i class="ti-user"></i></button></div>' +
+                                '<div class="btn-group btn-group-xs col-md-2 "><button id="btn-row-delete" onclick="delete_account(\''+fields[1]+'\');" class="btn btn-danger"><i class="ti-trash"></i></button></div> '
+                        }
+                    }
+                }
+            ]
+
+
+        });
+    }
+
+    $(document).ready(function() {
+        firebase.database().ref('mobile_users').child('drivers').on('value', function (snapshot){
+            let dataSrc = [];
+            let count = 0;
+            if(snapshot.exists()){
+                snapshot.forEach(function(childSnapshot){
+                    firebase.database().ref('mobile_users').child('drivers').child(childSnapshot.key).on('value', function (snapshot1){
+                        let storageObj = snapshot1.val();
+
+                        let dataSet = [storageObj.profile_pic_url, storageObj.first_name, storageObj.last_name, storageObj.vehicle.vehicle_no, storageObj.vehicle.cat_name, storageObj.email, storageObj.contact_no, storageObj.block_status, storageObj.block_status+"-"+storageObj.uid];
+                        dataSrc.push(dataSet);
+
+                        count++;
+                        if(count === snapshot.numChildren()){
+                            console.log(count);
+                            feedDT(dataSrc);
+                        }
+                    });
+                });
+            }
+        });
+    });
+
+</script>
+
