@@ -250,11 +250,11 @@
                         },
                         success: function(r){
                             if(r.status === 200){
-                                swal("Removed!", r.message, "success");
+                                swal(r.message, r.message, "success");
                             }
 
-                            if(r.status == 500){
-                                swal("Failed", r.message, "error");
+                            if(r.status === 500){
+                                swal(r.message, r.message, "error");
                             }
                         }
                     });
@@ -292,11 +292,11 @@
                         },
                         success: function(r){
                             if(r.status === 200){
-                                swal("Removed!", r.message, "success");
+                                swal(r.message, r.message, "success");
                             }
 
-                            if(r.status == 500){
-                                swal("Failed", r.message, "error");
+                            if(r.status === 500){
+                                swal(r.message, r.message, "error");
                             }
                         }
                     });
@@ -369,7 +369,6 @@
                         }
                         count++;
                         if(count === snapshot.numChildren()){
-                            console.log(count);
                             feedDT(dataSrc);
                         }
                     });

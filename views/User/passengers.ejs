@@ -1,12 +1,12 @@
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor">Manage Drivers</h3>
+        <h3 class="text-themecolor">Manage Passengers</h3>
     </div>
     <div class="col-md-7 align-self-center">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="javascript:void(0)">Mobile Users</a></li>
-            <li class="breadcrumb-item active">Drivers</li>
+            <li class="breadcrumb-item active">Passengers</li>
         </ol>
     </div>
 </div>
@@ -25,7 +25,7 @@
         <div class="col-lg-12">
             <div class="card card-outline-info">
                 <div class="card-header">
-                    <h4 class="m-b-0 text-white">Driver details</h4>
+                    <h4 class="m-b-0 text-white">Passenger details</h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive m-t-40">
@@ -55,7 +55,7 @@
             if (isConfirm)
             {
                 $.ajax({
-                    url: "/user/removeDriver",
+                    url: "/user/removePassenger",
                     data: {ID : data},
                     method: "post",
                     dataType: "json",
@@ -69,7 +69,7 @@
                             swal("Removed!", r.message, "success");
                         }
 
-                        if(r.status == 500){
+                        if(r.status === 500){
                             swal("Failed", r.message, "error");
                         }
                     }
@@ -100,7 +100,7 @@
                 if (isConfirm)
                 {
                     $.ajax({
-                        url: "/user/blockDriver",
+                        url: "/user/blockPassenger",
                         data: {
                             ID : fields[1],
                             status: fields[0]
@@ -145,7 +145,7 @@
                 if (isConfirm)
                 {
                     $.ajax({
-                        url: "/user/blockDriver",
+                        url: "/user/blockPassenger",
                         data: {
                             ID : fields[1],
                             status: fields[0]
@@ -192,8 +192,6 @@
                 },
                 { title: "First Name" },
                 { title: "Last Name" },
-                { title: "Vehicle No" },
-                { title: "Vehicle Category" },
                 { title: "E-mail" },
                 { title: "Contact No" },
                 { title: "status",
@@ -225,15 +223,15 @@
     }
 
     $(document).ready(function() {
-        firebase.database().ref('mobile_users').child('drivers').on('value', function (snapshot){
+        firebase.database().ref('mobile_users').child('passengers').on('value', function (snapshot){
             let dataSrc = [];
             let count = 0;
             if(snapshot.exists()){
                 snapshot.forEach(function(childSnapshot){
-                    firebase.database().ref('mobile_users').child('drivers').child(childSnapshot.key).on('value', function (snapshot1){
+                    firebase.database().ref('mobile_users').child('passengers').child(childSnapshot.key).on('value', function (snapshot1){
                         let storageObj = snapshot1.val();
 
-                        let dataSet = [storageObj.profile_pic_url, storageObj.first_name, storageObj.last_name, storageObj.vehicle.vehicle_no, storageObj.vehicle.cat_name, storageObj.email, storageObj.contact_no, storageObj.blocked_status, storageObj.blocked_status+"-"+storageObj.uid];
+                        let dataSet = [storageObj.profile_pic_url, storageObj.first_name, storageObj.last_name, storageObj.email, storageObj.contact_no, storageObj.blocked_status, storageObj.blocked_status+"-"+storageObj.uid];
                         dataSrc.push(dataSet);
 
                         count++;

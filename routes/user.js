@@ -5,7 +5,6 @@ let multer = require('multer');
 let fs = require('fs');
 let admin = require('firebase-admin');
 
-
 const firebaseConfig = {
     apiKey: "AIzaSyD-bGtCqg3dwzulZP8_WYcSlLpEgKbIM30",
     authDomain: "onway-53e1b.firebaseapp.com",
@@ -98,6 +97,21 @@ router.get('/drivers', function(req, res) {
     }
 });
 
+router.get('/passengers', function(req, res) {
+    if(req.session.user && ( req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN')) {
+        res.render('Template/template', {
+            Page_Content: 'Passenger',
+            title: 'OnWay | Passengers',
+            profile: req.session.user
+        });
+    }else{
+        res.render('Login/login', {
+            data: 'Please login with super admin account!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
 
 router.post('/createRegionalUser', function(req,res){
     upload(req, res, function(err) {
@@ -175,32 +189,113 @@ router.post('/removeSuperUser', function(req, res){
 
 });
 
+router.post('/removeDriver', function(req, res){
+
+    let starCountRef = firebase.database().ref('mobile_users').child('drivers').child(req.body.ID);
+    starCountRef.once('value', function (snapshot) {
+        admin.auth().deleteUser(req.body.ID)
+            .then(function() {
+                let usr = firebase.database().ref('mobile_users').child('drivers').child(req.body.ID);
+                usr.remove()
+                    .then(function () {
+                        res.end('{"message" : "Account removed successfully.!", "status" : 200}');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        res.end('{"message" : "Firebase error.!", "status" : 500}');
+                    });
+            })
+            .catch(function(error) {
+                res.end('{"message" : "Authentication error.!", "status" : 500}');
+            });
+    });
+
+});
+
+router.post('/removePassenger', function(req, res){
+
+    let starCountRef = firebase.database().ref('mobile_users').child('passengers').child(req.body.ID);
+    starCountRef.once('value', function (snapshot) {
+        admin.auth().deleteUser(req.body.ID)
+            .then(function() {
+                let usr = firebase.database().ref('mobile_users').child('passengers').child(req.body.ID);
+                usr.remove()
+                    .then(function () {
+                        res.end('{"message" : "Account removed successfully.!", "status" : 200}');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        res.end('{"message" : "Firebase error.!", "status" : 500}');
+                    });
+            })
+            .catch(function(error) {
+                res.end('{"message" : "Authentication error.!", "status" : 500}');
+            });
+    });
+
+});
+
+
 
 
 router.post('/blockSuperUser', function(req, res){
 
+    if(req.body.status === '1')
+    {
+        admin.auth().updateUser(req.body.ID, {
+            disabled: true
+        }).then(function (userRecord) {
 
-    let starCountRef = firebase.database().ref('backend_users').child(req.body.ID).once('value', function (snapshot) {
+            firebase.database().ref('backend_users').child(req.body.ID).update({
+                status: 0
+            }, function (errors) {
+                if (errors) {
+                    console.log(errors);
+                    res.end('{"message" : "Firebase error.!", "status" : 500}');
+                } else {
+                    res.end('{"message" : "Selected account has been blocked.!", "status" : 200}');
+                }
+            });
+
+        }).catch(function (error) {
+            console.log('Error updating user:', error);
+        });
+    }
+    if (req.body.status === '0') {
+        admin.auth().updateUser(req.body.ID, {
+            disabled: false
+        }).then(function (userRecord) {
+
+            firebase.database().ref('backend_users').child(req.body.ID).update({
+                status: 1
+            }, function (errors) {
+                if (errors) {
+                    console.log(errors);
+                    res.end('{"message" : "Firebase error.!", "status" : 500}');
+                } else {
+                    res.end('{"message" : "Selected account has been activated.!", "status" : 200}');
+                }
+            });
+
+        }).catch(function (error) {
+            console.log('Error updating user:', error);
+        });
+    }
+});
+
+
+router.post('/blockDriver', function(req, res){
+
+    let starCountRef = firebase.database().ref('mobile_users').child('drivers').child(req.body.ID).once('value', function (snapshot) {
         console.log(snapshot.val());
-        if(req.body.status === '1')
+        if(req.body.status === '0')
         {
             admin.auth().updateUser(req.body.ID, {
                 disabled: true
             }).then(function (userRecord) {
 
-                firebase.database().ref('backend_users').child(req.body.ID).set({
-                    status: 0,
-                    account_type: 'REGIONAL ADMIN',
-                    email: snapshot.val().email,
-                    first_name: snapshot.val().first_name,
-                    last_name: snapshot.val().last_name,
-                    profile_pic_url: snapshot.val().profile_pic_url,
-                    contact_no: snapshot.val().contact_no,
-                    pro_id: snapshot.val().pro_id,
-                    des_id: snapshot.val().des_id,
-                    district_name: snapshot.val().district_name,
-                    province_name: snapshot.val().province_name,
-                    uid: snapshot.val().uid
+                firebase.database().ref('mobile_users').child('drivers').child(req.body.ID).update({
+                    blocked_status: 1
                 }, function (errors) {
                     if (errors) {
                         console.log(errors);
@@ -214,24 +309,62 @@ router.post('/blockSuperUser', function(req, res){
                 console.log('Error updating user:', error);
             });
         }
-        if (req.body.status === '0') {
+        if (req.body.status === '1') {
             admin.auth().updateUser(req.body.ID, {
                 disabled: false
             }).then(function (userRecord) {
 
-                firebase.database().ref('backend_users').child(req.body.ID).set({
-                    status: 1,
-                    account_type: 'REGIONAL ADMIN',
-                    email: snapshot.val().email,
-                    first_name: snapshot.val().first_name,
-                    last_name: snapshot.val().last_name,
-                    profile_pic_url: snapshot.val().profile_pic_url,
-                    contact_no: snapshot.val().contact_no,
-                    pro_id: snapshot.val().pro_id,
-                    des_id: snapshot.val().des_id,
-                    district_name: snapshot.val().district_name,
-                    province_name: snapshot.val().province_name,
-                    uid: snapshot.val().uid
+                firebase.database().ref('mobile_users').child('drivers').child(req.body.ID).update({
+                    blocked_status: 0
+                }, function (errors) {
+                    if (errors) {
+                        console.log(errors);
+                        res.end('{"message" : "Firebase error.!", "status" : 500}');
+                    } else {
+                        res.end('{"message" : "Selected account has been activated.!", "status" : 200}');
+                    }
+                });
+
+            }).catch(function (error) {
+                console.log('Error updating user:', error);
+            });
+        }
+    });
+
+});
+
+router.post('/blockPassenger', function(req, res){
+
+    let starCountRef = firebase.database().ref('mobile_users').child('passengers').child(req.body.ID).once('value', function (snapshot) {
+        console.log(snapshot.val());
+        if(req.body.status === '0')
+        {
+            admin.auth().updateUser(req.body.ID, {
+                disabled: true
+            }).then(function (userRecord) {
+
+                firebase.database().ref('mobile_users').child('passengers').child(req.body.ID).update({
+                    blocked_status: 1
+                }, function (errors) {
+                    if (errors) {
+                        console.log(errors);
+                        res.end('{"message" : "Firebase error.!", "status" : 500}');
+                    } else {
+                        res.end('{"message" : "Selected account has been blocked.!", "status" : 200}');
+                    }
+                });
+
+            }).catch(function (error) {
+                console.log('Error updating user:', error);
+            });
+        }
+        if (req.body.status === '1') {
+            admin.auth().updateUser(req.body.ID, {
+                disabled: false
+            }).then(function (userRecord) {
+
+                firebase.database().ref('mobile_users').child('passengers').child(req.body.ID).update({
+                    blocked_status: 0
                 }, function (errors) {
                     if (errors) {
                         console.log(errors);

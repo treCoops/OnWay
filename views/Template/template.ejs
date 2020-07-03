@@ -54,10 +54,14 @@
             <% include ../User/reg_admin.ejs %>
         <% } %>
 
-
         <% if (Page_Content == 'Driver'){ %>
             <% include ../User/drivers.ejs %>
         <% } %>
+
+        <% if (Page_Content == 'Passenger'){ %>
+            <% include ../User/passengers.ejs %>
+        <% } %>
+
         <!-- ============================================================== -->
         <!-- End Container fluid  -->
         <!-- ============================================================== -->
