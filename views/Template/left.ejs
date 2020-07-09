@@ -35,9 +35,10 @@
 
                 <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
 
-                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-cellphone-android"></i><span class="hide-menu">Mobile Users</span></a>
+                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-taxi"></i><span class="hide-menu">Taxi</span></a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="/user/drivers">Drivers</a></li>
+                            <li><a href="/user/trackDrivers">Track Drivers</a></li>
                             <li><a href="/user/passengers">Passengers</a></li>
                         </ul>
                     </li>
@@ -46,10 +47,49 @@
 
                 <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
 
-                    <li> <a class="waves-effect waves-dark" href="/user/trackDrivers"><i class="mdi mdi-map-marker-radius"></i><span class="hide-menu">Track Drivers</span></a>
+                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-food"></i><span class="hide-menu">Foods</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/user/foodRiders">Food Delivery Riders</a></li>
+                            <li><a href="/user/trackFoodRiders">Track Riders</a></li>
+                        </ul>
                     </li>
 
                 <% } %>
+
+                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+
+                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-store"></i><span class="hide-menu">Groceries</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/user/groceryRiders">Grocery Delivery Riders</a></li>
+                            <li><a href="/user/trackGroceryRiders">Track Riders</a></li>
+                        </ul>
+                    </li>
+
+                <% } %>
+
+                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+
+                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-medical-bag"></i><span class="hide-menu">Pharmacies</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/user/pharmacyRiders">Delivery Riders</a></li>
+                            <li><a href="/user/trackPharmacyRiders">Track Riders</a></li>
+                        </ul>
+                    </li>
+
+                <% } %>
+
+                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+
+                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-email"></i><span class="hide-menu">Courier</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/user/courierRiders">Delivery Riders</a></li>
+                            <li><a href="/user/trackCourierRiders">Track Riders</a></li>
+                        </ul>
+                    </li>
+
+                <% } %>
+
+
 
             </ul>
         </nav>

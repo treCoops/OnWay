@@ -66,6 +66,38 @@
             <% include ../User/track_driver.ejs %>
         <% } %>
 
+        <% if (Page_Content == 'Food_Rider'){ %>
+            <% include ../Food/drivers.ejs %>
+        <% } %>
+
+        <% if (Page_Content == 'Track_Food_Driver'){ %>
+            <% include ../Food/track_food_drivers.ejs %>
+        <% } %>
+
+        <% if (Page_Content == 'Grocery_Rider'){ %>
+            <% include ../Grocery/drivers.ejs %>
+        <% } %>
+
+        <% if (Page_Content == 'Track_Grocery_Driver'){ %>
+            <% include ../Grocery/track_grocery_drivers.ejs %>
+        <% } %>
+
+        <% if (Page_Content == 'Pharmacy_Rider'){ %>
+            <% include ../Pharmacy/drivers.ejs %>
+        <% } %>
+
+        <% if (Page_Content == 'Track_Pharmacy_Driver'){ %>
+            <% include ../Pharmacy/track_pharmacy_drivers.ejs %>
+        <% } %>
+
+        <% if (Page_Content == 'Courier_Rider'){ %>
+            <% include ../Courier/drivers.ejs %>
+        <% } %>
+
+        <% if (Page_Content == 'Track_Courier_Driver'){ %>
+            <% include ../Courier/track_courier_drivers.ejs %>
+        <% } %>
+
         <!-- ============================================================== -->
         <!-- End Container fluid  -->
         <!-- ============================================================== -->

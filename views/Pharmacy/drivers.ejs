@@ -1,12 +1,12 @@
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor">Manage Taxi Drivers</h3>
+        <h3 class="text-themecolor">Manage Pharmacy Delivery Riders</h3>
     </div>
     <div class="col-md-7 align-self-center">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="javascript:void(0)">Taxi</a></li>
-            <li class="breadcrumb-item active">Manage Drivers</li>
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Pharmacy</a></li>
+            <li class="breadcrumb-item active">Manage Riders</li>
         </ol>
     </div>
 </div>
@@ -25,7 +25,7 @@
         <div class="col-lg-12">
             <div class="card card-outline-info">
                 <div class="card-header">
-                    <h4 class="m-b-0 text-white">Driver details</h4>
+                    <h4 class="m-b-0 text-white">Rider details</h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive m-t-40">
@@ -232,7 +232,7 @@
                 snapshot.forEach(function(childSnapshot){
                     firebase.database().ref('mobile_users').child('drivers').child(childSnapshot.key).on('value', function (snapshot1){
                         let storageObj = snapshot1.val();
-                        if(storageObj.work.taxi === 1){
+                        if(storageObj.work.pharmacy === 1){
                             let dataSet = [storageObj.profile_pic_url, storageObj.first_name, storageObj.last_name, storageObj.vehicle.vehicle_no, storageObj.vehicle.cat_name, storageObj.email, storageObj.contact_no, storageObj.blocked_status, storageObj.blocked_status+"-"+storageObj.uid];
                             dataSrc.push(dataSet);
                         }

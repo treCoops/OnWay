@@ -107,7 +107,7 @@ router.get('/drivers', function(req, res) {
         if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
             res.render('Template/template', {
                 Page_Content: 'Driver',
-                title: 'OnWay | Drivers',
+                title: 'OnWay | Taxi Drivers',
                 profile: req.session.user
             });
         }else{
@@ -121,6 +121,214 @@ router.get('/drivers', function(req, res) {
     }else{
         res.render('Login/login', {
             data: 'Please login with super admin account!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/foodRiders', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Food_Rider',
+                title: 'OnWay | Food Delivery Riders',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login with super admin account!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/trackFoodRiders', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Track_Food_Driver',
+                title: 'OnWay | Track Food Delivery Riders',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/groceryRiders', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Grocery_Rider',
+                title: 'OnWay | Grocery Delivery Riders',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login with super admin account!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/trackGroceryRiders', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Track_Grocery_Driver',
+                title: 'OnWay | Track Grocery Delivery Riders',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/pharmacyRiders', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Pharmacy_Rider',
+                title: 'OnWay | Pharmacy Delivery Riders',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login with super admin account!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/trackPharmacyRiders', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Track_Pharmacy_Driver',
+                title: 'OnWay | Track Pharmacy Delivery Riders',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/courierRiders', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Courier_Rider',
+                title: 'OnWay | Courier Delivery Riders',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login with super admin account!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/trackCourierRiders', function(req, res) {
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Track_Courier_Driver',
+                title: 'OnWay | Track Courier Delivery Riders',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login!.',
             title: 'OnWay | Login',
             status: ''
         });
@@ -158,7 +366,7 @@ router.get('/trackDrivers', function(req, res) {
         if(req.session.user.account_type.toString() === 'SUPER ADMIN' || req.session.user.account_type.toString() === 'REGIONAL ADMIN') {
             res.render('Template/template', {
                 Page_Content: 'Track_Driver',
-                title: 'OnWay | Passengers',
+                title: 'OnWay | Track Taxi Drivers',
                 profile: req.session.user
             });
         }else{

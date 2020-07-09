@@ -1,12 +1,12 @@
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor">Track Drivers</h3>
+        <h3 class="text-themecolor">Track Pharmacy Delivery Drivers</h3>
     </div>
     <div class="col-md-7 align-self-center">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="javascript:void(0)">Taxi</a></li>
-            <li class="breadcrumb-item"><a href="javascript:void(0)">Track drivers</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Pharmacy</a></li>
+            <li class="breadcrumb-item active">Track Riders</li>
         </ol>
     </div>
 </div>
@@ -42,7 +42,7 @@
         <div class="col-12">
             <div class="card card-outline-info">
                 <div class="card-header">
-                    <h4 class="m-b-0 text-white">Taxi Driver Realtime Map</h4>
+                    <h4 class="m-b-0 text-white">Pharmacy Deliver Riders Realtime Map</h4>
                 </div>
                 <div class="card-body">
                     <div id="map" class="gmaps"></div>
@@ -71,7 +71,7 @@
                 snapshot.forEach(function(childSnapshot){
                     firebase.database().ref('mobile_users').child('drivers').child(childSnapshot.key).on('value', function (snapshot1){
                         let storageObj = snapshot1.val();
-                        if(storageObj.work.taxi === 1) {
+                        if(storageObj.work.pharmacy === 1) {
                             let marker = {lat: storageObj.live_loc.lat, lng: storageObj.live_loc.long};
                             addMarker(marker);
                         }
