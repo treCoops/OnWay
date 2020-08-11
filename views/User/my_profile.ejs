@@ -206,18 +206,6 @@
             $("#txt_tel").val(snapshot.val().contact_no);
             $("#txt_uid").val(snapshot.val().uid);
             $("#txt_current_pic_url").val(snapshot.val().profile_pic_url);
-            $('.dropify').dropify({
-                "defaultFile": "/images/users/"+snapshot.val().profile_pic_url,
-                "data-allowed-file-extensions" : 'jpg JPG png PNG',
-                "data-max-file-size" : '1M',
-                "data-height" : 300,
-                "messages": {
-                    default: 'Click here to select image.',
-                    replace: 'Click here again if you want to change image.',
-                    remove: 'Remove',
-                    error: 'Ooops, Something went wrong.'
-                }
-            });
             $("#page_load").hide();
         });
 

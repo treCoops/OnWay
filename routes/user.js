@@ -396,6 +396,31 @@ router.post('/createRegionalUser', function(req,res){
         firebase.auth().createUserWithEmailAndPassword(req.body.txt_email, req.body.txt_confirm_password).then(function () {
             let user = firebase.auth().currentUser;
 
+            let create_account = 0;
+            let taxi = 0;
+            let food = 0;
+            let grocery = 0;
+            let pharmacy = 0;
+            let courier = 0;
+
+            if(req.body.chk_create_account === '1')
+                create_account = 1;
+
+            if(req.body.chk_taxi_access === '1')
+                taxi = 1;
+
+            if(req.body.chk_food_access === '1')
+                food = 1;
+
+            if(req.body.chk_grocery_access === '1')
+                grocery = 1;
+
+            if(req.body.chk_pharmacy_access === '1')
+                pharmacy = 1;
+
+            if(req.body.chk_courier_access === '1')
+                courier = 1;
+
             firebase.database().ref('backend_users').child(user.uid).set({
                 account_type: 'REGIONAL ADMIN',
                 email: req.body.txt_email,
@@ -405,6 +430,14 @@ router.post('/createRegionalUser', function(req,res){
                 contact_no: req.body.txt_tel,
                 pro_id: req.body.cmb_province,
                 des_id: req.body.cmb_district,
+                privileges: {
+                    courier_access: courier,
+                    create_user: create_account,
+                    food_access: food,
+                    grocery_access: grocery,
+                    pharmacy_access: pharmacy,
+                    taxi_access: taxi
+                },
                 district_name: req.body.txt_district_name,
                 province_name: req.body.txt_province_name,
                 uid: user.uid,
