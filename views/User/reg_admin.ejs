@@ -173,7 +173,7 @@
                         <h4 class="m-b-0 text-white">Regional admin edit form</h4>
                     </div>
                     <div class="card-body">
-                        <form id="form_edit" name="form_edit" enctype="multipart/form-data" role="form" method="POST" class="form-horizontal">
+                        <form id="form_edit" name="form_edit" role="form" method="POST" class="form-horizontal">
                             <div class="form-body">
                                 <h3 class="box-title">Regional admin information</h3>
                                 <hr class="m-t-0 m-b-40">
@@ -192,6 +192,7 @@
                                             <label class="control-label">District</label>
                                             <select class="form-control" id="edit_cmb_district" name="edit_cmb_district" tabindex="1"></select>
                                             <input type="hidden" id="edit_txt_district_name" name="edit_txt_district_name" class="form-control">
+                                            <input type="hidden" id="edit_txt_uid" name="edit_txt_uid" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -347,7 +348,7 @@
                                 '<div class="btn-group btn-group-xs col-md-4"><button id="btn-row-edit2" onclick="get_user_data(\''+data+'\');" class="btn btn-warning"><i class="ti-pencil"></i></button></div>' +
                                 '<div class="btn-group btn-group-xs col-md-4"><button id="btn-row-delete" onclick="delete_account(\''+fields[1]+'\');" class="btn btn-danger"><i class="ti-trash"></i></button></div> </div>'
                         }if(fields[0] === '0'){
-                            return '<div class="col-md-12"> <div class="btn-group btn-group-xs col-md-4"><button id="btn-row-edit" onclick="block_account(\''+data+'\');" class="btn btn-info"><i class="ti-user"></i></button></div>' +
+                            return '<div class="col-md-12"> <div class="btn-group btn-group-xs col-md-4"><button id="btn-row-edit" onclick="block_account(\''+data+'\');" class="btn btn-success"><i class="ti-check-box"></i></button></div>' +
                                 '<div class="btn-group btn-group-xs col-md-4"><button id="btn-row-edit2" onclick="get_user_data(\''+data+'\');" class="btn btn-warning"><i class="ti-pencil"></i></button></div>' +
                                 '<div class="btn-group btn-group-xs col-md-4"><button id="btn-row-delete" onclick="delete_account(\''+fields[1]+'\');" class="btn btn-danger"><i class="ti-trash"></i></button></div> </div>'
                         }
@@ -502,6 +503,7 @@
             $('#edit_txt_last_name').val(snapshot.val().last_name);
             $('#edit_txt_email').val(snapshot.val().email);
             $('#edit_txt_tel').val(snapshot.val().contact_no);
+            $('#edit_txt_uid').val(snapshot.val().uid);
 
             console.log(snapshot.val().privileges.courier_access);
 
@@ -538,6 +540,7 @@
 
             $("#edit_cmb_province option[value="+snapshot.val().pro_id+"]").attr('selected', 'selected');
 
+
             firebase.database().ref('web_data').child('province').child(snapshot.val().pro_id).child('district').once('value', function (snapshot4){
                 if(snapshot4.exists()){
                     $('#edit_cmb_district').empty();
@@ -559,17 +562,27 @@
 
         $("#div_add").hide();
         $("#div_edit").hide();
+        $("#txt_first_name").val('');
+        $("#txt_last_name").val('');
         $("#txt_email").val('');
         $("#txt_password").val('');
         $("#txt_confirm_password").val('');
         $("#txt_tel").val('');
         $(".dropify-clear").trigger("click");
+
         $("#chk_create_account").prop("checked", false);
         $("#chk_food_access").prop("checked", false);
         $("#chk_grocery_access").prop("checked", false);
         $("#chk_pharmacy_access").prop("checked", false);
         $("#chk_taxi_access").prop("checked", false);
         $("#chk_courier_access").prop("checked", false);
+
+        $("#edit_chk_create_account").prop("checked", false);
+        $("#edit_chk_food_access").prop("checked", false);
+        $("#edit_chk_grocery_access").prop("checked", false);
+        $("#edit_chk_pharmacy_access").prop("checked", false);
+        $("#edit_chk_taxi_access").prop("checked", false);
+        $("#edit_chk_courier_access").prop("checked", false);
 
         firebase.database().ref('backend_users').on('value', function (snapshot){
             let dataSrc = [];
@@ -631,6 +644,14 @@
                     });
                 }
             });
+        });
+
+        $('#edit_cmb_province').on('change', function() {
+            $('#edit_txt_province_name').val($('#edit_cmb_province option:selected').text());
+        });
+
+        $('#edit_cmb_district').on('change', function() {
+            $('#edit_txt_district_name').val($('#edit_cmb_district option:selected').text());
         });
 
         $('#cmb_district').on('change', function() {
@@ -743,6 +764,117 @@
                         $("#chk_pharmacy_access").prop("checked", false);
                         $("#chk_taxi_access").prop("checked", false);
                         $("#chk_courier_access").prop("checked", false);
+
+                        if(r.status === 200){
+                            $.toast({
+                                heading: 'Success',
+                                text: r.message,
+                                position: 'top-right',
+                                loaderBg:'#effff8',
+                                icon: 'info',
+                                hideAfter: 3500
+                            });
+                        }
+
+                        if(r.status == 500){
+                            $.toast({
+                                heading: 'Error',
+                                text: r.message,
+                                position: 'top-right',
+                                loaderBg:'#effff8',
+                                icon: 'error',
+                                hideAfter: 3500
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#form_edit").validate({
+            ignore: [],
+            rules: {
+                edit_txt_first_name: {
+                    required: true
+                },
+                edit_cmb_province: {
+                    required: true
+                },
+                edit_cmb_district: {
+                    required: true
+                },
+                edit_txt_last_name: {
+                    required: true
+                },
+                edit_txt_email: {
+                    required: true,
+                    email: true
+                },
+                edit_txt_tel:{
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                    maxlength:10
+                }
+            },
+            messages: {
+                edit_txt_first_name: "First name required.!",
+                edit_cmb_province: "Select a province.!",
+                edit_cmb_district: "Select a district.!",
+                edit_txt_last_name: "Last name required.!",
+                edit_txt_email: {
+                    required: "Email address required.!",
+                    email: "Please check your email address format.!"
+                },
+                edit_txt_tel:{
+                    required: "Contact no required.!",
+                    digits: "Contact no can have digits only.!",
+                    minlength: "Contact no can have 10 digits only.!",
+                    maxlength: "Contact no can have 10 digits only.!"
+                }
+
+            },
+            highlight: function(element) {
+                $(element).addClass('error');
+            }, unhighlight: function(element) {
+                $(element).removeClass('error');
+            },
+            submitHandler: function(form){
+
+                $("#page_load").show();
+
+                $.ajax({
+                    url: '/user/updateRegionalUser',
+                    data: $('#form_edit').serializeArray(),
+                    dataType: 'json',
+                    method: 'post',
+                    error: function(error){
+                        $("#page_load").hide();
+                        $.toast({
+                            heading: 'Error',
+                            text: 'Internal Server Error!',
+                            position: 'top-right',
+                            loaderBg:'#effff8',
+                            icon: 'error',
+                            hideAfter: 3500
+                        });
+                    },
+                    success: function(r){
+                        $("#page_load").hide();
+
+                        // $("#txt_email").val('');
+                        // $("#txt_password").val('');
+                        // $("#txt_confirm_password").val('');
+                        // $("#txt_first_name").val('');
+                        // $("#txt_last_name").val('');
+                        // $(".dropify-clear").trigger("click");
+                        // $("#txt_tel").val('');
+                        // $("#chk_create_account").prop("checked", false);
+                        // $("#chk_food_access").prop("checked", false);
+                        // $("#chk_grocery_access").prop("checked", false);
+                        // $("#chk_pharmacy_access").prop("checked", false);
+                        // $("#chk_taxi_access").prop("checked", false);
+                        // $("#chk_courier_access").prop("checked", false);
 
                         if(r.status === 200){
                             $.toast({

@@ -386,6 +386,50 @@ router.get('/trackDrivers', function(req, res) {
     }
 });
 
+router.post('/updateRegionalUser', function(req,res){
+
+    console.log(req.body.edit_cmb_province);
+    console.log(req.body.edit_txt_province_name);
+    console.log(req.body.edit_cmb_district);
+    console.log(req.body.edit_txt_district_name);
+    console.log(req.body.edit_txt_first_name);
+    console.log(req.body.edit_txt_last_name);
+    console.log(req.body.edit_txt_email);
+    console.log(req.body.edit_txt_tel);
+    console.log(req.body.edit_chk_create_account);
+    console.log(req.body.edit_chk_food_access);
+    console.log(req.body.edit_chk_pharmacy_access);
+    console.log(req.body.edit_chk_taxi_access);
+    console.log(req.body.edit_chk_grocery_access);
+    console.log(req.body.edit_chk_courier_access);
+    console.log(req.body.edit_txt_uid);
+
+    firebase.database().ref('backend_users').child(req.body.edit_txt_uid).once('value', function (snapshot) {
+        console.log(snapshot.val());
+        if (snapshot.val().email === req.body.edit_txt_email) {
+            console.log('eq');
+        } else{
+            admin.auth().updateUser(uid, {
+                email: 'modifiedUser@example.com',
+                emailVerified: true,
+                disabled: false
+            }).then(function(userRecord) {
+                console.log('Successfully updated user', userRecord.toJSON());
+            })
+            .catch(function(error) {
+                console.log('Error updating user:', error);
+            });
+
+        }
+    });
+
+
+
+
+    res.end('{"message" : "Profile picture is not uploaded.!", "status" : 500}');
+
+});
+
 router.post('/createRegionalUser', function(req,res){
     upload(req, res, function(err) {
         if (err) {
