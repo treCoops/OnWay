@@ -107,7 +107,34 @@ router.get('/manager', function(req, res, next) {
         if(req.session.user.account_type.toString() === 'SUPER ADMIN') {
             res.render('Template/template', {
                 Page_Content: 'Manager',
-                title: 'OnWay | Regional Admin',
+                title: 'OnWay | Manager',
+                profile: req.session.user
+            });
+        }else{
+            res.render('Login/login', {
+                data: 'Please login with super admin account!.',
+                title: 'OnWay | Login',
+                status: ''
+            });
+        }
+
+    }else{
+        res.render('Login/login', {
+            data: 'Please login!.',
+            title: 'OnWay | Login',
+            status: ''
+        });
+    }
+});
+
+router.get('/coordinator', function(req, res, next) {
+
+    if(req.session.user) {
+
+        if(req.session.user.account_type.toString() === 'SUPER ADMIN') {
+            res.render('Template/template', {
+                Page_Content: 'Coordinator',
+                title: 'OnWay | Coordinator',
                 profile: req.session.user
             });
         }else{
@@ -628,6 +655,89 @@ router.post('/createManager', function(req,res){
     });
 });
 
+router.post('/createCoordinator', function(req,res){
+    upload(req, res, function(err) {
+        if (err) {
+            console.log('Error: ' + err)
+            res.end('{"message" : "Profile picture is not uploaded.!", "status" : 500}');
+        }
+
+        firebase.auth().createUserWithEmailAndPassword(req.body.txt_email, req.body.txt_confirm_password).then(function () {
+            let user = firebase.auth().currentUser;
+
+            let create_account = 0;
+            let taxi = 0;
+            let food = 0;
+            let grocery = 0;
+            let pharmacy = 0;
+            let courier = 0;
+
+            if(req.body.chk_create_account === '1')
+                create_account = 1;
+
+            if(req.body.chk_taxi_access === '1')
+                taxi = 1;
+
+            if(req.body.chk_food_access === '1')
+                food = 1;
+
+            if(req.body.chk_grocery_access === '1')
+                grocery = 1;
+
+            if(req.body.chk_pharmacy_access === '1')
+                pharmacy = 1;
+
+            if(req.body.chk_courier_access === '1')
+                courier = 1;
+
+            firebase.database().ref('backend_users').child(user.uid).set({
+                account_type: 'COORDINATOR',
+                email: req.body.txt_email,
+                first_name: req.body.txt_first_name,
+                last_name: req.body.txt_last_name,
+                profile_pic_url: req.file.filename,
+                contact_no: req.body.txt_tel,
+                pro_id: req.body.cmb_province,
+                des_id: req.body.cmb_district,
+                privileges: {
+                    courier_access: courier,
+                    create_user: create_account,
+                    food_access: food,
+                    grocery_access: grocery,
+                    pharmacy_access: pharmacy,
+                    taxi_access: taxi
+                },
+                district_name: req.body.txt_district_name,
+                province_name: req.body.txt_province_name,
+                uid: user.uid,
+                status: 1,
+            }, function(errors) {
+                if (errors) {
+                    console.log(errors);
+                    res.end('{"message" : "Firebase error.!", "status" : 500}');
+                } else {
+
+                    user.sendEmailVerification().then(function() {
+                        res.end('{"message" : "Account created successfully, Please check for verify email for given mail.!", "status" : 200}');
+                    }).catch(function(error) {
+                        res.end('{"message" : "Message Server Error.!", "status" : 500}');
+                    });
+
+                }
+            });
+
+        }).catch(function (error) {
+            console.log(error);
+            res.end('{"message" : "This account is already exist.!", "status" : 500}');
+            fs.unlink('./public/images/users/'+req.file.filename,function(err){
+                if(err) return console.log(err);
+                console.log('file deleted successfully');
+            });
+
+        });
+    });
+});
+
 router.post('/removeSuperUser', function(req, res){
 
     let starCountRef = firebase.database().ref('backend_users').child(req.body.ID);
@@ -865,6 +975,14 @@ router.post('/createUser', function(req, res) {
                 last_name: req.body.txt_last_name,
                 profile_pic_url: req.file.filename,
                 contact_no: req.body.txt_tel,
+                privileges: {
+                    courier_access: 1,
+                    create_user: 1,
+                    food_access: 1,
+                    grocery_access: 1,
+                    pharmacy_access: 1,
+                    taxi_access: 1
+                },
                 uid: user.uid,
                 status: 1,
             }, function(errors) {

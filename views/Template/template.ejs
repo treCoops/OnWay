@@ -58,6 +58,10 @@
             <% include ../User/manager.ejs %>
         <% } %>
 
+        <% if (Page_Content == 'Coordinator'){ %>
+            <% include ../User/coordinator.ejs %>
+        <% } %>
+
         <% if (Page_Content == 'Driver'){ %>
             <% include ../User/drivers.ejs %>
         <% } %>

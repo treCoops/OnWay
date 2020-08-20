@@ -22,20 +22,34 @@
                 <li> <a class="waves-effect waves-dark" href="/dashboard" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
 
-                <% if(profile.account_type.toString() === 'SUPER ADMIN'){ %>
+                <% if(profile.privileges.create_user === 1){ %>
 
                     <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account-group"></i><span class="hide-menu">Users</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="/user">Super Admin</a></li>
-                            <li><a href="/user/regional_admin">Regional Admin</a></li>
-                            <li><a href="/user/manager">Manager</a></li>
-                            <li><a href="/user/coordinator">Coordinator</a></li>
+                            <% if(profile.account_type.toString() === 'SUPER ADMIN'){ %>
+                                <li><a href="/user">Super Admin</a></li>
+                                <li><a href="/user/regional_admin">Regional Admin</a></li>
+                                <li><a href="/user/manager">Manager</a></li>
+                                <li><a href="/user/coordinator">Coordinator</a></li>
+                            <% } %>
+                            <% if(profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+                                <li><a href="/user/regional_admin">Regional Admin</a></li>
+                                <li><a href="/user/manager">Manager</a></li>
+                                <li><a href="/user/coordinator">Coordinator</a></li>
+                            <% } %>
+                            <% if(profile.account_type.toString() === 'MANAGER'){ %>
+                                <li><a href="/user/manager">Manager</a></li>
+                                <li><a href="/user/coordinator">Coordinator</a></li>
+                            <% } %>
+                            <% if(profile.account_type.toString() === 'COORDINATOR'){ %>
+                                <li><a href="/user/coordinator">Coordinator</a></li>
+                            <% } %>
                         </ul>
                     </li>
 
                 <% } %>
 
-                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+                <% if(profile.privileges.taxi_access === 1){ %>
 
                     <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-taxi"></i><span class="hide-menu">Taxi</span></a>
                         <ul aria-expanded="false" class="collapse">
@@ -47,7 +61,7 @@
 
                 <% } %>
 
-                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+                <% if(profile.privileges.food_access === 1){ %>
 
                     <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-food"></i><span class="hide-menu">Foods</span></a>
                         <ul aria-expanded="false" class="collapse">
@@ -58,7 +72,7 @@
 
                 <% } %>
 
-                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+                <% if(profile.privileges.grocery_access === 1){ %>
 
                     <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-store"></i><span class="hide-menu">Groceries</span></a>
                         <ul aria-expanded="false" class="collapse">
@@ -69,7 +83,7 @@
 
                 <% } %>
 
-                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+                <% if(profile.privileges.pharmacy_access === 1){ %>
 
                     <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-medical-bag"></i><span class="hide-menu">Pharmacies</span></a>
                         <ul aria-expanded="false" class="collapse">
@@ -80,7 +94,7 @@
 
                 <% } %>
 
-                <% if(profile.account_type.toString() === 'SUPER ADMIN' || profile.account_type.toString() === 'REGIONAL ADMIN'){ %>
+                <% if(profile.privileges.courier_access === 1){ %>
 
                     <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-email"></i><span class="hide-menu">Courier</span></a>
                         <ul aria-expanded="false" class="collapse">

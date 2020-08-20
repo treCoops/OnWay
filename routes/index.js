@@ -34,13 +34,13 @@ router.post('/signIn', function(req, res, next) {
 
   firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
     let user = firebase.auth().currentUser;
-    console.log(user.emailVerified);
     if(user.emailVerified){
       if (user) {
         let starCountRef = firebase.database().ref('backend_users').child(user.uid);
         starCountRef.once('value', function (snapshot) {
 
           req.session.user = snapshot.val();
+          console.log(req.session.user);
           res.render('Template/template', {
             Page_Content: 'Dashboard',
             title: 'OnWay | Dashboard',

@@ -81,11 +81,20 @@ router.post('/updateProfile', function(req, res){
         let user = firebase.auth().currentUser;
         let data;
 
-        console.log(data);
-
         if("file" in req){
 
-            if(req.session.user.account_type === 'REGIONAL ADMIN'){
+            if(req.session.user.account_type === 'SUPER ADMIN'){
+                data = {
+                    status: 1,
+                    account_type: req.session.user.account_type,
+                    email: req.body.txt_email,
+                    first_name: req.body.txt_first_name,
+                    last_name: req.body.txt_last_name,
+                    profile_pic_url: req.file.filename,
+                    contact_no: req.body.txt_tel,
+                    uid: user.uid
+                }
+            }else{
                 data = {
                     account_type: req.session.user.account_type,
                     email: req.body.txt_email,
@@ -101,22 +110,10 @@ router.post('/updateProfile', function(req, res){
                     province_name: req.session.user.province_name,
                 }
             }
-            if(req.session.user.account_type === 'SUPER ADMIN'){
-                data = {
-                    status: 1,
-                    account_type: req.session.user.account_type,
-                    email: req.body.txt_email,
-                    first_name: req.body.txt_first_name,
-                    last_name: req.body.txt_last_name,
-                    profile_pic_url: req.file.filename,
-                    contact_no: req.body.txt_tel,
-                    uid: user.uid
-                }
-            }
 
             user.updateEmail(req.body.txt_email).then(function() {
                 user = firebase.auth().currentUser;
-                firebase.database().ref('backend_users').child(user.uid).set(data
+                firebase.database().ref('backend_users').child(user.uid).update(data
                 , function(errors) {
                     if (errors) {
                         console.log(errors);
@@ -144,7 +141,18 @@ router.post('/updateProfile', function(req, res){
             });
         }else{
 
-            if(req.session.user.account_type === 'REGIONAL ADMIN'){
+            if(req.session.user.account_type === 'SUPER ADMIN'){
+                data = {
+                    status: 1,
+                    account_type: req.session.user.account_type,
+                    email: req.body.txt_email,
+                    first_name: req.body.txt_first_name,
+                    last_name: req.body.txt_last_name,
+                    profile_pic_url: req.body.txt_current_pic_url,
+                    contact_no: req.body.txt_tel,
+                    uid: user.uid
+                }
+            }else{
                 data = {
                     account_type: req.session.user.account_type,
                     email: req.body.txt_email,
@@ -160,27 +168,15 @@ router.post('/updateProfile', function(req, res){
                     province_name: req.session.user.province_name,
                 }
             }
-            if(req.session.user.account_type === 'SUPER ADMIN'){
-                data = {
-                    status: 1,
-                    account_type: req.session.user.account_type,
-                    email: req.body.txt_email,
-                    first_name: req.body.txt_first_name,
-                    last_name: req.body.txt_last_name,
-                    profile_pic_url: req.body.txt_current_pic_url,
-                    contact_no: req.body.txt_tel,
-                    uid: user.uid
-                }
-            }
 
             user.updateEmail(req.body.txt_email).then(function() {
                 user = firebase.auth().currentUser;
-                firebase.database().ref('backend_users').child(user.uid).set(data, function(errors) {
+                firebase.database().ref('backend_users').child(user.uid).update(data, function(errors) {
                     if (errors) {
                         console.log(errors);
                         res.end('{"message" : "Firebase error.!", "status" : 500}');
                     } else {
-                        if(req.body.txt_email !== eq.session.user.email) {
+                        if(req.body.txt_email !== req.session.user.email) {
                             user.sendEmailVerification().then(function () {
                                 res.end('{"message" : "Account updated successfully, Please check for verify email for given mail.!", "status" : 200}');
                             }).catch(function (error) {
