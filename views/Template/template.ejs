@@ -54,6 +54,10 @@
             <% include ../User/reg_admin.ejs %>
         <% } %>
 
+        <% if (Page_Content == 'Manager'){ %>
+            <% include ../User/manager.ejs %>
+        <% } %>
+
         <% if (Page_Content == 'Driver'){ %>
             <% include ../User/drivers.ejs %>
         <% } %>
