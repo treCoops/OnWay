@@ -388,46 +388,52 @@ router.get('/trackDrivers', function(req, res) {
 
 router.post('/updateRegionalUser', function(req,res){
 
-    console.log(req.body.edit_cmb_province);
-    console.log(req.body.edit_txt_province_name);
-    console.log(req.body.edit_cmb_district);
-    console.log(req.body.edit_txt_district_name);
-    console.log(req.body.edit_txt_first_name);
-    console.log(req.body.edit_txt_last_name);
-    console.log(req.body.edit_txt_email);
-    console.log(req.body.edit_txt_tel);
-    console.log(req.body.edit_chk_create_account);
-    console.log(req.body.edit_chk_food_access);
-    console.log(req.body.edit_chk_pharmacy_access);
-    console.log(req.body.edit_chk_taxi_access);
-    console.log(req.body.edit_chk_grocery_access);
-    console.log(req.body.edit_chk_courier_access);
-    console.log(req.body.edit_txt_uid);
+    let create_account = 0;
+    let taxi = 0;
+    let food = 0;
+    let grocery = 0;
+    let pharmacy = 0;
+    let courier = 0;
 
-    firebase.database().ref('backend_users').child(req.body.edit_txt_uid).once('value', function (snapshot) {
-        console.log(snapshot.val());
-        if (snapshot.val().email === req.body.edit_txt_email) {
-            console.log('eq');
-        } else{
-            admin.auth().updateUser(uid, {
-                email: 'modifiedUser@example.com',
-                emailVerified: true,
-                disabled: false
-            }).then(function(userRecord) {
-                console.log('Successfully updated user', userRecord.toJSON());
-            })
-            .catch(function(error) {
-                console.log('Error updating user:', error);
-            });
+    if(req.body.edit_chk_create_account === '1')
+        create_account = 1;
 
+    if(req.body.edit_chk_taxi_access === '1')
+        taxi = 1;
+
+    if(req.body.edit_chk_food_access === '1')
+        food = 1;
+
+    if(req.body.edit_chk_grocery_access === '1')
+        grocery = 1;
+
+    if(req.body.edit_chk_pharmacy_access === '1')
+        pharmacy = 1;
+
+    if(req.body.edit_chk_courier_access === '1')
+        courier = 1;
+
+    firebase.database().ref('backend_users').child(req.body.edit_txt_uid).update({
+        pro_id: req.body.edit_cmb_province,
+        des_id: req.body.edit_cmb_district,
+        privileges: {
+            courier_access: courier,
+            create_user: create_account,
+            food_access: food,
+            grocery_access: grocery,
+            pharmacy_access: pharmacy,
+            taxi_access: taxi
+        },
+        district_name: req.body.edit_txt_district_name,
+        province_name: req.body.edit_txt_province_name
+    }, function(errors) {
+        if (errors) {
+            console.log(errors);
+            res.end('{"message" : "Internal server error.!", "status" : 500}');
+        } else {
+            res.end('{"message" : "Account updated successfully.!", "status" : 200}');
         }
     });
-
-
-
-
-    res.end('{"message" : "Profile picture is not uploaded.!", "status" : 500}');
-
 });
 
 router.post('/createRegionalUser', function(req,res){
